@@ -14,12 +14,12 @@ import ru.geekbrains.math.Rect;
 public abstract class BaseScreen implements Screen, InputProcessor {
 
     protected SpriteBatch batch;
-    private Rect screenBounds;
-    private Rect worldBounds;
-    private Rect glBounds;
+    private Rect screenBounds;   // границы экрана в пикселях
+    private Rect worldBounds;    // границы проэкции мировых координат
+    private Rect glBounds;       // gl-левские координаты
 
-    private Matrix4 worldToGl;
-    private Matrix3 screenToWorld;
+    private Matrix4 worldToGl;           // матрица преобразований из мировых координат к gl
+    private Matrix3 screenToWorld;       // матрица преобразований из экранных координат к мировым
 
     private Vector2 touch;
 
@@ -30,7 +30,7 @@ public abstract class BaseScreen implements Screen, InputProcessor {
         Gdx.input.setInputProcessor(this);
         screenBounds = new Rect();
         worldBounds = new Rect();
-        glBounds = new Rect(0, 0, 1f, 1f);
+        glBounds = new Rect(0, 0, 1f, 1f);  // инициализация GL-координат
         worldToGl = new Matrix4();
         screenToWorld = new Matrix3();
         touch = new Vector2();
@@ -44,21 +44,27 @@ public abstract class BaseScreen implements Screen, InputProcessor {
     @Override
     public void resize(int width, int height) {
         System.out.println("resize width = " + width + " height = " + height);
-        screenBounds.setSize(width, height);
-        screenBounds.setLeft(0);
-        screenBounds.setBottom(0);
+        screenBounds.setSize(width, height);     // установка размера прямоугольница в экранных координатах
+        screenBounds.setLeft(0);                 // установка крайней левой точки
+        screenBounds.setBottom(0);               // установка крайней нижней точки
 
-        float aspect = width / (float) height;
-        worldBounds.setHeight(1f);
-        worldBounds.setWidth(1f*aspect);
+        float aspect = width / (float) height;   // вычисление соотношения сторон
+        // установка границ в мировых координатах
+        worldBounds.setHeight(1f);        // фиксация по высоте (оси Y)
+        worldBounds.setWidth(1f*aspect);  // установка ширины с соблюдением пропорций
+        // преобразование из системы мировых координат(3D) в систему координат GL(4D)
         MatrixUtils.calcTransitionMatrix(worldToGl, worldBounds, glBounds);
-        batch.setProjectionMatrix(worldToGl);
+        batch.setProjectionMatrix(worldToGl);   // установка матрицы преобразований для "батчера"
+        // преобразование из системы экранных(2D) координат в систему мировых координат(3D)
         MatrixUtils.calcTransitionMatrix(screenToWorld, screenBounds, worldBounds);
         resize(worldBounds);
     }
 
+    // перегруженный вспомогательный метод, выводящий информацию о текущих параметрах
+    // прямоугольника в мировой системе координат
     public void resize(Rect worldBounds) {
-        System.out.println("worldBounds width = " + worldBounds.getWidth() + " height = " + worldBounds.getHeight());
+        System.out.println("worldBounds width = " + worldBounds.getWidth() +
+                " height = " + worldBounds.getHeight());
     }
 
     @Override
@@ -104,11 +110,14 @@ public abstract class BaseScreen implements Screen, InputProcessor {
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
         System.out.println("touchDown screenX = " + screenX + " screenY = " + screenY);
-        touch.set(screenX, Gdx.graphics.getHeight() - screenY).mul(screenToWorld);
+        // преобразование координат нажатия тача из пиксельной СК в мировую СК
+        touch.set(screenX, screenBounds.getHeight() - screenY).mul(screenToWorld);
         touchDown(touch, pointer);
         return false;
     }
 
+    // перегруженный вспомогательный метод, выводящий информацию о текущих координатах
+    // нажатия тача в мировой системе координат
     public boolean touchDown(Vector2 touch, int pointer) {
         System.out.println("touchDown touchX = " + touch.x + " touchY = " + touch.y);
         return false;
@@ -117,11 +126,14 @@ public abstract class BaseScreen implements Screen, InputProcessor {
     @Override
     public boolean touchUp(int screenX, int screenY, int pointer, int button) {
         System.out.println("touchUp screenX = " + screenX + " screenY = " + screenY);
-        touch.set(screenX, Gdx.graphics.getHeight() - screenY).mul(screenToWorld);
+        // преобразование координат отпускания тача из пиксельной СК в мировую СК
+        touch.set(screenX, screenBounds.getHeight() - screenY).mul(screenToWorld);
         touchUp(touch, pointer);
         return false;
     }
 
+    // перегруженный вспомогательный метод, выводящий информацию о текущих координатах
+    // отпускания тача в мировой системе координат
     public boolean touchUp(Vector2 touch, int pointer) {
         System.out.println("touchUp touchX = " + touch.x + " touchY = " + touch.y);
         return false;
@@ -130,11 +142,14 @@ public abstract class BaseScreen implements Screen, InputProcessor {
     @Override
     public boolean touchDragged(int screenX, int screenY, int pointer) {
         System.out.println("touchDragged screenX = " + screenX + " screenY = " + screenY);
-        touch.set(screenX, Gdx.graphics.getHeight() - screenY).mul(screenToWorld);
+        // преобразование координат перемещения с нажатым тачем из пиксельной СК в мировую СК
+        touch.set(screenX, screenBounds.getHeight() - screenY).mul(screenToWorld);
         touchDragged(touch, pointer);
         return false;
     }
 
+    // перегруженный вспомогательный метод, выводящий информацию о текущих координатах
+    // при перемещении с нажатым тачемв мировой системе координат
     public boolean touchDragged(Vector2 touch, int pointer) {
         System.out.println("touchDragged touchX = " + touch.x + " touchY = " + touch.y);
         return false;

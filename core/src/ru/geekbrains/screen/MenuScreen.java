@@ -9,6 +9,7 @@ import com.badlogic.gdx.math.Vector2;
 import ru.geekbrains.base.BaseScreen;
 import ru.geekbrains.math.Rect;
 import ru.geekbrains.sprite.Background;
+import ru.geekbrains.sprite.Logotype;
 
 public class MenuScreen extends BaseScreen {
 
@@ -16,13 +17,11 @@ public class MenuScreen extends BaseScreen {
     private Texture bg;
     private Background background;
     private Vector2 pos;
-
-/*
+    private Logotype logotype;
     private Vector2 touch;
     private Vector2 v;
-    private Vector2 buf;
     private static final float V_LEN = 0.8f;
-*/
+    private Vector2 buf;
 
 /*
     private Integer screenWidth = Gdx.graphics.getWidth();
@@ -38,12 +37,10 @@ public class MenuScreen extends BaseScreen {
         bg = new Texture("bg.png");
         pos = new Vector2();
         background = new Background(new TextureRegion(bg));
-
-/*
+        logotype = new Logotype(new TextureRegion(img));
         touch = new Vector2();
         v = new Vector2();
         buf = new Vector2();
-*/
 /*
         imgWidth = img.getWidth();
         imgHeight = img.getHeight();
@@ -54,6 +51,7 @@ public class MenuScreen extends BaseScreen {
     public void resize(Rect worldBounds) {
         super.resize(worldBounds);
         background.resize(worldBounds);
+        logotype.resize(worldBounds);
     }
 
     @Override
@@ -66,14 +64,12 @@ public class MenuScreen extends BaseScreen {
         batch.draw(img, 0f, 0f, 0.5f, 0.5f);
         batch.end();
 
-/*
         buf.set(touch);
         if (buf.sub(pos).len() > V_LEN) {
             pos.add(v);
         } else {
             pos.set(touch);
         }
-*/
 /*
         if ((screenHeight >= pos.y + imgHeight && pos.y >= 0) &&
         (screenWidth >= pos.x + imgWidth && pos.x >= 0)) {
@@ -87,6 +83,16 @@ public class MenuScreen extends BaseScreen {
         img.dispose();
         bg.dispose();
         super.dispose();
+    }
+
+    public boolean touchDown(Vector2 touch, int pointer) {
+        super.touchDown(touch, pointer);
+        return false;
+    }
+
+    public boolean touchUp(Vector2 touch, int pointer) {
+        super.touchUp(touch, pointer);
+        return false;
     }
 
 /*

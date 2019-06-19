@@ -2,6 +2,7 @@ package ru.geekbrains.base;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Vector2;
 
 import ru.geekbrains.math.Rect;
 
@@ -19,23 +20,29 @@ public class Sprite extends Rect {
 
     public void draw(SpriteBatch batch) {
         batch.draw(
-                regions[frame],
-                getLeft(), getBottom(),
-                halfWidth, halfHeight,
-                getWidth(), getHeight(),
-                scale, scale,
-                angle
+                regions[frame],             // текущий регион
+                getLeft(), getBottom(),     // точка отрисовки
+                halfWidth, halfHeight,      // точка вращения
+                getWidth(), getHeight(),    // ширина и высота
+                scale, scale,               // масштаб по оси x и y
+                angle                       // угол вращения
         );
     }
 
     public void setHeightProportion(float height) {
         setHeight(height);
         float aspect = regions[frame].getRegionWidth() / (float) regions[frame].getRegionHeight();
-        setWidth(height*aspect);
+        setWidth(height * aspect);
     }
 
     public void resize(Rect worldBounds) {
 
+    }
+
+    public void touchDown(Vector2 touch, int pointer) {
+    }
+
+    public void touchUp(Vector2 touch, int pointer) {
     }
 
     public float getAngle() {
