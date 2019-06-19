@@ -3,33 +3,57 @@ package ru.geekbrains.screen;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
 import ru.geekbrains.base.BaseScreen;
+import ru.geekbrains.math.Rect;
+import ru.geekbrains.sprite.Background;
 
 public class MenuScreen extends BaseScreen {
 
     private Texture img;
-    private Texture background;
-
-    //    private Vector2 touch;
+    private Texture bg;
+    private Background background;
     private Vector2 pos;
+
+/*
+    private Vector2 touch;
     private Vector2 v;
+    private Vector2 buf;
+    private static final float V_LEN = 0.8f;
+*/
+
+/*
     private Integer screenWidth = Gdx.graphics.getWidth();
     private Integer screenHeight = Gdx.graphics.getHeight();
     private Integer imgWidth;
     private Integer imgHeight;
+*/
 
     @Override
     public void show() {
         super.show();
         img = new Texture("badlogic.jpg");
+        bg = new Texture("bg.png");
+        pos = new Vector2();
+        background = new Background(new TextureRegion(bg));
+
+/*
+        touch = new Vector2();
+        v = new Vector2();
+        buf = new Vector2();
+*/
+/*
         imgWidth = img.getWidth();
         imgHeight = img.getHeight();
-        background = new Texture("space3.png");
-//        touch = new Vector2();
-        pos = new Vector2();
-        v = new Vector2(0, 0);
+*/
+    }
+
+    @Override
+    public void resize(Rect worldBounds) {
+        super.resize(worldBounds);
+        background.resize(worldBounds);
     }
 
     @Override
@@ -38,33 +62,55 @@ public class MenuScreen extends BaseScreen {
         Gdx.gl.glClearColor(0.2f, 0.5f, 0.5f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         batch.begin();
-        batch.draw(background, 0, 0);
-        batch.draw(img, pos.x, pos.y);
+        background.draw(batch);
+        batch.draw(img, 0f, 0f, 0.5f, 0.5f);
         batch.end();
+
+/*
+        buf.set(touch);
+        if (buf.sub(pos).len() > V_LEN) {
+            pos.add(v);
+        } else {
+            pos.set(touch);
+        }
+*/
+/*
         if ((screenHeight >= pos.y + imgHeight && pos.y >= 0) &&
         (screenWidth >= pos.x + imgWidth && pos.x >= 0)) {
             pos.add(v);
         }
+*/
     }
 
     @Override
     public void dispose() {
         img.dispose();
-        background.dispose();
+        bg.dispose();
         super.dispose();
     }
 
+/*
+    @Override
+    public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+        touch.set(screenX, Gdx.graphics.getHeight() - screenY);
+        v.set(touch.cpy().sub(pos)).setLength(V_LEN);  // посчитали вектор, который указывает
+//              из вектора положения в точку куда мы кликнули мышкой и уменьшили его с
+//              с помощью метода setLength для показа плавного движения
+        return false;
+    }
+*/
+
+/*
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
         pos.set(screenWidth >= screenX + imgWidth ?
                         screenX : screenWidth - imgWidth,
                 screenHeight >= screenHeight - screenY + imgHeight ?
                         screenHeight - screenY : screenHeight - imgHeight);
-//        touch = pos;
         System.out.println("touchDown touch.x = " + pos.x + " touch.y = " + pos.y);
         return false;
     }
-
+/*
     @Override
     public boolean keyDown(int keycode) {
         System.out.println("keyDown keycode = " + keycode);
@@ -105,4 +151,5 @@ public class MenuScreen extends BaseScreen {
         System.out.println("keyUp keycode = " + keycode + " pos.x = " + pos.x + " pos.y = " + pos.y);
         return false;
     }
+*/
 }

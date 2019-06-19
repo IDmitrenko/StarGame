@@ -17,7 +17,7 @@ public class StarGameExample extends ApplicationAdapter {
     public void create () {
         batch = new SpriteBatch();
         img = new Texture("badlogic.jpg");
-        background = new Texture("space.png");
+        background = new Texture("bg.png");
 
         Vector2 v1 = new Vector2(2, 2);
         Vector2 v2 = new Vector2(0, -1);
