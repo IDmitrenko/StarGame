@@ -165,4 +165,12 @@ public abstract class BaseScreen implements Screen, InputProcessor {
         System.out.println("scrolled amount = " + amount);
         return false;
     }
+
+    public Rect getScreenBounds() {
+        return screenBounds;
+    }
+
+    public Matrix3 getScreenToWorld() {
+        return screenToWorld;
+    }
 }

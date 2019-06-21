@@ -20,7 +20,7 @@ public class MenuScreen extends BaseScreen {
     private Logotype logotype;
     private Vector2 touch;
     private Vector2 v;
-    private static final float V_LEN = 0.8f;
+    private static final float V_LEN = 0.2f;
     private Vector2 buf;
 
 /*
@@ -37,10 +37,12 @@ public class MenuScreen extends BaseScreen {
         bg = new Texture("bg.png");
         pos = new Vector2();
         background = new Background(new TextureRegion(bg));
-        logotype = new Logotype(new TextureRegion(img));
+        logotype = new Logotype(new TextureRegion(img), 0.5f);
+//        logotype = new Logotype(new TextureRegion(img));
         touch = new Vector2();
         v = new Vector2();
         buf = new Vector2();
+
 /*
         imgWidth = img.getWidth();
         imgHeight = img.getHeight();
@@ -52,6 +54,7 @@ public class MenuScreen extends BaseScreen {
         super.resize(worldBounds);
         background.resize(worldBounds);
         logotype.resize(worldBounds);
+        touch.set(logotype.pos.x, logotype.pos.y);
     }
 
     @Override
@@ -61,21 +64,17 @@ public class MenuScreen extends BaseScreen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         batch.begin();
         background.draw(batch);
-        batch.draw(img, 0f, 0f, 0.5f, 0.5f);
+        logotype.draw(batch);
+//        batch.draw(img, 0f, 0f, 0.5f, 0.5f);
         batch.end();
 
         buf.set(touch);
-        if (buf.sub(pos).len() > V_LEN) {
-            pos.add(v);
+        if (buf.sub(logotype.pos).len() > V_LEN) {
+            logotype.pos.add(v);
         } else {
-            pos.set(touch);
+            logotype.pos.set(touch);
         }
-/*
-        if ((screenHeight >= pos.y + imgHeight && pos.y >= 0) &&
-        (screenWidth >= pos.x + imgWidth && pos.x >= 0)) {
-            pos.add(v);
-        }
-*/
+
     }
 
     @Override
@@ -95,6 +94,14 @@ public class MenuScreen extends BaseScreen {
         return false;
     }
 
+    @Override
+    public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+        touch.set(screenX, getScreenBounds().getHeight() - screenY).mul(getScreenToWorld());
+        v.set(touch.cpy().sub(pos)).setLength(V_LEN);
+        touchDown(touch, pointer);
+        return false;
+    }
+
 /*
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
@@ -102,6 +109,7 @@ public class MenuScreen extends BaseScreen {
         v.set(touch.cpy().sub(pos)).setLength(V_LEN);  // посчитали вектор, который указывает
 //              из вектора положения в точку куда мы кликнули мышкой и уменьшили его с
 //              с помощью метода setLength для показа плавного движения
+        touchDown(touch, pointer);
         return false;
     }
 */
