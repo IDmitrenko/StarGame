@@ -22,10 +22,7 @@ public class Star extends Sprite {
     public void update(float delta) {
         super.update(delta);
         pos.mulAdd(v, delta);
-        if (getRight() < worldBounds.getLeft()) setLeft(worldBounds.getRight());
-        if (getLeft() > worldBounds.getRight()) setRight(worldBounds.getLeft());
-        if (getTop() < worldBounds.getBottom()) setBottom(worldBounds.getTop());
-        if (getBottom() > worldBounds.getTop()) setTop(worldBounds.getBottom());
+        checkBounds();
     }
 
     @Override
@@ -34,5 +31,13 @@ public class Star extends Sprite {
         float posX = Rnd.nextFloat(worldBounds.getLeft(), worldBounds.getRight());
         float posY = Rnd.nextFloat(worldBounds.getBottom(), worldBounds.getTop());
         pos.set(posX, posY);
+    }
+
+    private void checkBounds() {
+        if (worldBounds == null) return;
+        if (getRight() < worldBounds.getLeft()) setLeft(worldBounds.getRight());
+        if (getLeft() > worldBounds.getRight()) setRight(worldBounds.getLeft());
+        if (getTop() < worldBounds.getBottom()) setBottom(worldBounds.getTop());
+        if (getBottom() > worldBounds.getTop()) setTop(worldBounds.getBottom());
     }
 }

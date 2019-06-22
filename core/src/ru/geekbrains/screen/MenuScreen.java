@@ -1,8 +1,6 @@
 package ru.geekbrains.screen;
 
 import com.badlogic.gdx.Game;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -17,6 +15,8 @@ import ru.geekbrains.sprite.Star;
 
 public class MenuScreen extends BaseScreen {
 
+    private static final int STAR_COUNT = 256;
+
     private Game game;
 
     private Texture bg;
@@ -26,7 +26,7 @@ public class MenuScreen extends BaseScreen {
     private ButtonExit buttonExit;
     private ButtonPlay buttonPlay;
 
-    private Star star;
+    private Star[] stars = new Star[STAR_COUNT];
 
     public MenuScreen(Game game) {
         this.game = game;
@@ -40,7 +40,9 @@ public class MenuScreen extends BaseScreen {
         atlas = new TextureAtlas("textures/menuAtlas.tpack");
         buttonExit = new ButtonExit(atlas);
         buttonPlay = new ButtonPlay(atlas, game);
-        star = new Star(atlas);
+        for (int i = 0; i < stars.length; i++) {
+            stars[i] = new Star(atlas);
+        }
     }
 
     @Override
@@ -49,7 +51,9 @@ public class MenuScreen extends BaseScreen {
         background.resize(worldBounds);
         buttonExit.resize(worldBounds);
         buttonPlay.resize(worldBounds);
-        star.resize(worldBounds);
+        for (int i = 0; i < stars.length; i++) {
+            stars[i].resize(worldBounds);
+        }
     }
 
     @Override
@@ -60,13 +64,17 @@ public class MenuScreen extends BaseScreen {
     }
 
     public void update(float delta) {
-        star.update(delta);
+        for (int i = 0; i < stars.length; i++) {
+            stars[i].update(delta);
+        }
     }
 
     public void draw() {
         batch.begin();
         background.draw(batch);
-        star.draw(batch);
+        for (int i = 0; i < stars.length; i++) {
+            stars[i].draw(batch);
+        }
         buttonExit.draw(batch);
         buttonPlay.draw(batch);
         batch.end();
