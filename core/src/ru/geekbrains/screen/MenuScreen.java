@@ -9,31 +9,23 @@ import com.badlogic.gdx.math.Vector2;
 import ru.geekbrains.base.BaseScreen;
 import ru.geekbrains.math.Rect;
 import ru.geekbrains.sprite.Background;
-import ru.geekbrains.sprite.Logotype;
 
 public class MenuScreen extends BaseScreen {
 
-    private Texture img;
     private Texture bg;
     private Background background;
-    private Vector2 pos;
-    private Logotype logotype;
 
     @Override
     public void show() {
         super.show();
-        img = new Texture("badlogic.jpg");
-        bg = new Texture("bg.png");
-        pos = new Vector2();
+        bg = new Texture("textures/bg.png");
         background = new Background(new TextureRegion(bg));
-        logotype = new Logotype(new TextureRegion(img));
     }
 
     @Override
     public void resize(Rect worldBounds) {
         super.resize(worldBounds);
         background.resize(worldBounds);
-        logotype.resize(worldBounds);
     }
 
     @Override
@@ -44,7 +36,6 @@ public class MenuScreen extends BaseScreen {
     }
 
     public void update(float delta) {
-        logotype.update(delta);
     }
 
     public void draw() {
@@ -52,20 +43,17 @@ public class MenuScreen extends BaseScreen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         batch.begin();
         background.draw(batch);
-        logotype.draw(batch);
         batch.end();
     }
 
     @Override
     public void dispose() {
-        img.dispose();
         bg.dispose();
         super.dispose();
     }
 
     @Override
     public boolean touchDown(Vector2 touch, int pointer) {
-        logotype.touchDown(touch, pointer);
         return false;
     }
 
