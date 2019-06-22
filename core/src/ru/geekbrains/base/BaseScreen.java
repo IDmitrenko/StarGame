@@ -3,6 +3,7 @@ package ru.geekbrains.base;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Matrix3;
 import com.badlogic.gdx.math.Matrix4;
@@ -38,7 +39,8 @@ public abstract class BaseScreen implements Screen, InputProcessor {
 
     @Override
     public void render(float delta) {
-
+        Gdx.gl.glClearColor(0.2f, 0.5f, 0.5f, 1);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
     }
 
     @Override
@@ -111,7 +113,7 @@ public abstract class BaseScreen implements Screen, InputProcessor {
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
         System.out.println("touchDown screenX = " + screenX + " screenY = " + screenY);
         // преобразование координат нажатия тача из пиксельной СК в мировую СК
-        touch.set(screenX, screenBounds.getHeight() - screenY).mul(screenToWorld);
+        touch.set(screenX, Gdx.graphics.getHeight() - screenY).mul(screenToWorld);
         touchDown(touch, pointer);
         return false;
     }
@@ -127,7 +129,7 @@ public abstract class BaseScreen implements Screen, InputProcessor {
     public boolean touchUp(int screenX, int screenY, int pointer, int button) {
         System.out.println("touchUp screenX = " + screenX + " screenY = " + screenY);
         // преобразование координат отпускания тача из пиксельной СК в мировую СК
-        touch.set(screenX, screenBounds.getHeight() - screenY).mul(screenToWorld);
+        touch.set(screenX, Gdx.graphics.getHeight() - screenY).mul(screenToWorld);
         touchUp(touch, pointer);
         return false;
     }
@@ -143,7 +145,7 @@ public abstract class BaseScreen implements Screen, InputProcessor {
     public boolean touchDragged(int screenX, int screenY, int pointer) {
         System.out.println("touchDragged screenX = " + screenX + " screenY = " + screenY);
         // преобразование координат перемещения с нажатым тачем из пиксельной СК в мировую СК
-        touch.set(screenX, screenBounds.getHeight() - screenY).mul(screenToWorld);
+        touch.set(screenX, Gdx.graphics.getHeight() - screenY).mul(screenToWorld);
         touchDragged(touch, pointer);
         return false;
     }
@@ -166,11 +168,4 @@ public abstract class BaseScreen implements Screen, InputProcessor {
         return false;
     }
 
-    public Rect getScreenBounds() {
-        return screenBounds;
-    }
-
-    public Matrix3 getScreenToWorld() {
-        return screenToWorld;
-    }
 }
