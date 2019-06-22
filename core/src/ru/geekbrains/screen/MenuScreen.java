@@ -18,17 +18,6 @@ public class MenuScreen extends BaseScreen {
     private Background background;
     private Vector2 pos;
     private Logotype logotype;
-    private Vector2 touch;
-    private Vector2 v;
-    private static final float V_LEN = 0.2f;
-    private Vector2 buf;
-
-/*
-    private Integer screenWidth = Gdx.graphics.getWidth();
-    private Integer screenHeight = Gdx.graphics.getHeight();
-    private Integer imgWidth;
-    private Integer imgHeight;
-*/
 
     @Override
     public void show() {
@@ -37,16 +26,7 @@ public class MenuScreen extends BaseScreen {
         bg = new Texture("bg.png");
         pos = new Vector2();
         background = new Background(new TextureRegion(bg));
-        logotype = new Logotype(new TextureRegion(img), 0.5f);
-//        logotype = new Logotype(new TextureRegion(img));
-        touch = new Vector2();
-        v = new Vector2();
-        buf = new Vector2();
-
-/*
-        imgWidth = img.getWidth();
-        imgHeight = img.getHeight();
-*/
+        logotype = new Logotype(new TextureRegion(img));
     }
 
     @Override
@@ -54,27 +34,26 @@ public class MenuScreen extends BaseScreen {
         super.resize(worldBounds);
         background.resize(worldBounds);
         logotype.resize(worldBounds);
-        touch.set(logotype.pos.x, logotype.pos.y);
     }
 
     @Override
     public void render(float delta) {
         super.render(delta);
+        update(delta);
+        draw();
+    }
+
+    public void update(float delta) {
+        logotype.update(delta);
+    }
+
+    public void draw() {
         Gdx.gl.glClearColor(0.2f, 0.5f, 0.5f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         batch.begin();
         background.draw(batch);
         logotype.draw(batch);
-//        batch.draw(img, 0f, 0f, 0.5f, 0.5f);
         batch.end();
-
-        buf.set(touch);
-        if (buf.sub(logotype.pos).len() > V_LEN) {
-            logotype.pos.add(v);
-        } else {
-            logotype.pos.set(touch);
-        }
-
     }
 
     @Override
@@ -84,21 +63,9 @@ public class MenuScreen extends BaseScreen {
         super.dispose();
     }
 
-    public boolean touchDown(Vector2 touch, int pointer) {
-        super.touchDown(touch, pointer);
-        return false;
-    }
-
-    public boolean touchUp(Vector2 touch, int pointer) {
-        super.touchUp(touch, pointer);
-        return false;
-    }
-
     @Override
-    public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-        touch.set(screenX, getScreenBounds().getHeight() - screenY).mul(getScreenToWorld());
-        v.set(touch.cpy().sub(pos)).setLength(V_LEN);
-        touchDown(touch, pointer);
+    public boolean touchDown(Vector2 touch, int pointer) {
+        logotype.touchDown(touch, pointer);
         return false;
     }
 

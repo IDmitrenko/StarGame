@@ -39,10 +39,16 @@ public class Sprite extends Rect {
 
     }
 
-    public void touchDown(Vector2 touch, int pointer) {
+    public void update(float delta) {
+
     }
 
-    public void touchUp(Vector2 touch, int pointer) {
+    public boolean touchDown(Vector2 touch, int pointer) {
+        return false;
+    }
+
+    public boolean touchUp(Vector2 touch, int pointer) {
+        return false;
     }
 
     public float getAngle() {
