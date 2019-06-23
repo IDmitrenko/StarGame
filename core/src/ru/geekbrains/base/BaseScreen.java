@@ -151,7 +151,7 @@ public abstract class BaseScreen implements Screen, InputProcessor {
     }
 
     // перегруженный вспомогательный метод, выводящий информацию о текущих координатах
-    // при перемещении с нажатым тачемв мировой системе координат
+    // при перемещении с нажатым тачем в мировой системе координат
     public boolean touchDragged(Vector2 touch, int pointer) {
         System.out.println("touchDragged touchX = " + touch.x + " touchY = " + touch.y);
         return false;
