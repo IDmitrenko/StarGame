@@ -8,9 +8,9 @@ import ru.geekbrains.math.Rect;
 
 public class MainShip extends BaseShip {
 
-    private static final float MAIN_SHIP_HEIGHT = 0.2f;
-
-    private int shipSpeed = 1;
+    private static final float MAIN_SHIP_HEIGHT = 0.1f;
+    private static final float BOTTOM_MARGIN = 0.02f;
+    private static final float V_LEN = 0.01f;
 
     private boolean pressedLeft = false;
 
@@ -27,34 +27,32 @@ public class MainShip extends BaseShip {
     @Override
     public void update(float delta) {
         super.update(delta);
-        if (worldBounds.getLeft() > getLeft()) {
-           if (Math.abs(worldBounds.getLeft() - getLeft()) > 0.0001f) {
-               vSpeed.setZero();
-               setLeft(worldBounds.getLeft());
-               return;
-           }
+        if (worldBounds.getLeft() > getLeft() &&
+                (Math.abs(worldBounds.getLeft() - getLeft()) > 0.0001f)) {
+            vSpeed.setZero();
+            setLeft(worldBounds.getLeft());
+            return;
         }
-        if (worldBounds.getRight() < getRight()) {
-            if (Math.abs(worldBounds.getRight() - getRight()) > 0.0001f) {
-                vSpeed.setZero();
-                setRight(worldBounds.getRight());
+        if (worldBounds.getRight() < getRight() &&
+                (Math.abs(worldBounds.getRight() - getRight()) > 0.0001f)) {
+            vSpeed.setZero();
+            setRight(worldBounds.getRight());
 //                System.out.println("worldBounds=" + worldBounds.getRight() + " getRight=" + getRight());
-                return;
-            }
+            return;
         }
         vBuf.set(vTouch);
-        vSpeed.setLength(delta * shipSpeed);
-        if (vBuf.sub(pos).len() > vSpeed.len()) {
+        vSpeed.setLength(V_LEN);
+        if (vBuf.sub(pos).len() >= V_LEN) {
             pos.add(vSpeed);
         } else {
             pos.set(vTouch);
         }
-        setBottom(worldBounds.getBottom() + 0.03f);
+        setBottom(worldBounds.getBottom() + BOTTOM_MARGIN);
     }
 
     public void resize(Rect worldBounds) {
         super.resize(worldBounds);
-        setBottom(worldBounds.getBottom() + 0.03f);
+        setBottom(worldBounds.getBottom() + BOTTOM_MARGIN);
     }
 
     public boolean keyDown(int keycode) {
@@ -93,4 +91,10 @@ public class MainShip extends BaseShip {
         return false;
     }
 
+    @Override
+    public boolean touchDown(Vector2 vTouch, int pointer) {
+//        vSpeed.set(vTouch).sub(pos);
+        vSpeed = vTouch.cpy().sub(pos);
+        return false;
+    }
 }
