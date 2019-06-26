@@ -21,9 +21,8 @@ public class GameScreen extends BaseScreen {
     private Texture bg;
     private Background background;
     private TextureAtlas atlas;
-    private TextureAtlas shipAtlas;
 
-    private Star[] stars = new Star[STAR_COUNT];
+    private Star[] stars;
 
     private MainShip mainShip;
 
@@ -36,12 +35,12 @@ public class GameScreen extends BaseScreen {
         super.show();
         bg = new Texture("textures/bg.png");
         background = new Background(new TextureRegion(bg));
-        atlas = new TextureAtlas("textures/menuAtlas.tpack");
-        shipAtlas = new TextureAtlas("textures/mainAtlas.tpack");
+        atlas = new TextureAtlas("textures/mainAtlas.tpack");
+        stars = new Star[STAR_COUNT];
         for (int i = 0; i < stars.length; i++) {
             stars[i] = new Star(atlas);
         }
-        mainShip = new MainShip(shipAtlas);
+        mainShip = new MainShip(atlas);
     }
 
     @Override
@@ -52,8 +51,8 @@ public class GameScreen extends BaseScreen {
     }
 
     public void update(float delta) {
-        for (int i = 0; i < stars.length; i++) {
-            stars[i].update(delta);
+        for (Star star : stars) {
+            star.update(delta);
         }
         mainShip.update(delta);
     }
@@ -61,8 +60,8 @@ public class GameScreen extends BaseScreen {
     public void draw() {
         batch.begin();
         background.draw(batch);
-        for (int i = 0; i < stars.length; i++) {
-            stars[i].draw(batch);
+        for (Star star : stars) {
+            star.draw(batch);
         }
         mainShip.draw(batch);
         batch.end();
@@ -72,8 +71,8 @@ public class GameScreen extends BaseScreen {
     public void resize(Rect worldBounds) {
         super.resize(worldBounds);
         background.resize(worldBounds);
-        for (int i = 0; i < stars.length; i++) {
-            stars[i].resize(worldBounds);
+        for (Star star : stars) {
+            star.resize(worldBounds);
         }
         mainShip.resize(worldBounds);
     }
@@ -82,40 +81,31 @@ public class GameScreen extends BaseScreen {
     public void dispose() {
         bg.dispose();
         atlas.dispose();
-        shipAtlas.dispose();
         super.dispose();
     }
 
     @Override
     public boolean keyDown(int keycode) {
-        if (mainShip != null) {
-            mainShip.keyDown(keycode);
-        }
-        return super.keyDown(keycode);
+        mainShip.keyDown(keycode);
+        return false;
     }
 
     @Override
     public boolean keyUp(int keycode) {
-        if (mainShip != null) {
-            mainShip.keyUp(keycode);
-        }
-        return super.keyUp(keycode);
+        mainShip.keyUp(keycode);
+        return false;
     }
 
     @Override
     public boolean touchDown(Vector2 touch, int pointer) {
-        if (mainShip != null) {
-            mainShip.touchDown(touch, pointer);
-        }
-        return super.touchDown(touch, pointer);
+        mainShip.touchDown(touch, pointer);
+        return false;
     }
 
     @Override
     public boolean touchUp(Vector2 touch, int pointer) {
-        if (mainShip != null) {
-            mainShip.touchUp(touch, pointer);
-        }
-        return super.touchUp(touch, pointer);
+        mainShip.touchUp(touch, pointer);
+        return false;
     }
 
     @Override

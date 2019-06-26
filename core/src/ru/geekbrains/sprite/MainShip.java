@@ -1,100 +1,146 @@
 package ru.geekbrains.sprite;
 
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
 
-import ru.geekbrains.base.BaseShip;
+import ru.geekbrains.base.Sprite;
 import ru.geekbrains.math.Rect;
 
-public class MainShip extends BaseShip {
+public class MainShip extends Sprite {
+
+    private static final int INVALID_POINTER = -1;
 
     private static final float MAIN_SHIP_HEIGHT = 0.1f;
     private static final float BOTTOM_MARGIN = 0.02f;
-    private static final float V_LEN = 0.01f;
 
     private boolean pressedLeft = false;
 
     private boolean pressedRight = false;
 
     private Vector2 vTouch = new Vector2();
-    private Vector2 vBuf = new Vector2();
+    private Vector2 vSpeed = new Vector2(0.5f, 0f);
+
+    private int leftPointer = INVALID_POINTER;
+    private int rightPointer = INVALID_POINTER;
+
+    private Rect worldBounds;
 
     public MainShip(TextureAtlas atlas) {
-        super(atlas.findRegion("main_ship"));
+        super(atlas.findRegion("main_ship"),1,2,2);
         setHeightProportion(MAIN_SHIP_HEIGHT);
     }
 
     @Override
     public void update(float delta) {
-        super.update(delta);
-        if (worldBounds.getLeft() > getLeft() &&
-                (Math.abs(worldBounds.getLeft() - getLeft()) > 0.0001f)) {
-            vSpeed.setZero();
-            setLeft(worldBounds.getLeft());
-            return;
-        }
-        if (worldBounds.getRight() < getRight() &&
-                (Math.abs(worldBounds.getRight() - getRight()) > 0.0001f)) {
-            vSpeed.setZero();
+        pos.mulAdd(vTouch, delta);
+        if (getRight() > worldBounds.getRight()) {
             setRight(worldBounds.getRight());
-//                System.out.println("worldBounds=" + worldBounds.getRight() + " getRight=" + getRight());
-            return;
+            stop();
         }
-        vBuf.set(vTouch);
-        vSpeed.setLength(V_LEN);
-        if (vBuf.sub(pos).len() >= V_LEN) {
-            pos.add(vSpeed);
-        } else {
-            pos.set(vTouch);
+        if (getLeft() < worldBounds.getLeft()) {
+            setLeft(worldBounds.getLeft());
+            stop();
         }
-        setBottom(worldBounds.getBottom() + BOTTOM_MARGIN);
     }
 
     public void resize(Rect worldBounds) {
-        super.resize(worldBounds);
+        this.worldBounds = worldBounds;
         setBottom(worldBounds.getBottom() + BOTTOM_MARGIN);
     }
 
     public boolean keyDown(int keycode) {
-        if (worldBounds == null) return false;
         switch (keycode) {
-            case 21:    // влево
+            case Input.Keys.A:
+            case Input.Keys.LEFT:
                 pressedLeft = true;
-                pressedRight = false;
-                vTouch.x = worldBounds.getLeft();
+                moveLeft();
                 break;
-            case 22:    // вправо
+            case Input.Keys.D:
+            case Input.Keys.RIGHT:
                 pressedRight = true;
-                pressedLeft = false;
-                vTouch.x = worldBounds.getRight();
+                moveRight();
+                break;
+            case Input.Keys.UP:
+                frame = 1;
                 break;
         }
-        vSpeed.set(vTouch).sub(pos);
         return false;
     }
 
     public boolean keyUp(int keycode) {
         switch (keycode) {
-            case 21:  // влево
-                if (pressedLeft)
-                    vTouch.x = pos.x;
+            case Input.Keys.A:
+            case Input.Keys.LEFT:
                 pressedLeft = false;
-                vSpeed.set(vTouch).sub(pos);
+                if (pressedRight) {
+                    moveRight();
+                }
                 break;
-            case 22:  // вправо
-                if (pressedRight)
-                    vTouch.x = pos.x;
+            case Input.Keys.D:
+            case Input.Keys.RIGHT:
                 pressedRight = false;
-                vSpeed.set(vTouch).sub(pos);
+                if (pressedLeft) {
+                    moveLeft();
+                }
                 break;
+            case Input.Keys.UP:
+                frame = 0;
+                break;
+        }
+        if (!pressedLeft && !pressedRight) {
+            stop();
         }
         return false;
     }
 
     @Override
     public boolean touchDown(Vector2 vTouch, int pointer) {
-//        vSpeed.set(vTouch).sub(pos);
-        vSpeed = vTouch.cpy().sub(pos);
+        if (vTouch.x < worldBounds.pos.x) {
+            if (leftPointer != INVALID_POINTER) {
+                return false;
+            }
+            leftPointer = pointer;
+            moveLeft();
+        } else {
+            if (rightPointer != INVALID_POINTER) {
+                return false;
+            }
+            rightPointer = pointer;
+            moveRight();
+        }
         return false;
+    }
+
+    @Override
+    public boolean touchUp(Vector2 vTouch, int pointer) {
+        if (pointer == leftPointer) {
+            leftPointer = INVALID_POINTER;
+            if (rightPointer != INVALID_POINTER) {
+                moveRight();
+            } else {
+                stop();
+            }
+        } else if (pointer == rightPointer) {
+            rightPointer = INVALID_POINTER;
+            if (leftPointer != INVALID_POINTER) {
+                moveLeft();
+            } else {
+                stop();
+            }
+        }
+        return false;
+    }
+
+    private void moveRight() {
+        vTouch.set(vSpeed);
+    }
+
+    private void moveLeft() {
+        vTouch.set(vSpeed).rotate(180);
+    }
+
+    private void stop() {
+        vTouch.setZero();
     }
 }

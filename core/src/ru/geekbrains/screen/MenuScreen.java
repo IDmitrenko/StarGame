@@ -26,7 +26,7 @@ public class MenuScreen extends BaseScreen {
     private ButtonExit buttonExit;
     private ButtonPlay buttonPlay;
 
-    private Star[] stars = new Star[STAR_COUNT];
+    private Star[] stars;
 
     public MenuScreen(Game game) {
         this.game = game;
@@ -40,6 +40,7 @@ public class MenuScreen extends BaseScreen {
         atlas = new TextureAtlas("textures/menuAtlas.tpack");
         buttonExit = new ButtonExit(atlas);
         buttonPlay = new ButtonPlay(atlas, game);
+        stars = new Star[STAR_COUNT];
         for (int i = 0; i < stars.length; i++) {
             stars[i] = new Star(atlas);
         }
@@ -51,8 +52,8 @@ public class MenuScreen extends BaseScreen {
         background.resize(worldBounds);
         buttonExit.resize(worldBounds);
         buttonPlay.resize(worldBounds);
-        for (int i = 0; i < stars.length; i++) {
-            stars[i].resize(worldBounds);
+        for (Star star : stars) {
+            star.resize(worldBounds);
         }
     }
 
@@ -64,16 +65,16 @@ public class MenuScreen extends BaseScreen {
     }
 
     public void update(float delta) {
-        for (int i = 0; i < stars.length; i++) {
-            stars[i].update(delta);
+        for (Star star : stars) {
+            star.update(delta);
         }
     }
 
     public void draw() {
         batch.begin();
         background.draw(batch);
-        for (int i = 0; i < stars.length; i++) {
-            stars[i].draw(batch);
+        for (Star star : stars) {
+            star.draw(batch);
         }
         buttonExit.draw(batch);
         buttonPlay.draw(batch);
