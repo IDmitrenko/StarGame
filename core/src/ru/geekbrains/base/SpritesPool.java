@@ -13,7 +13,7 @@ public abstract class SpritesPool<T extends Sprite> { //работаем со в
     protected abstract T newObject();  //метод инициализации необходимого объекта
 
     public T obtain() {  //метод который достает нужный объект из списка свободных объектов или
-                         // инициализирует его с помощью метода obtain
+                         // инициализирует его с помощью метода newObject
         T object;
         if (freeObjects.isEmpty()) {
             object = newObject();
