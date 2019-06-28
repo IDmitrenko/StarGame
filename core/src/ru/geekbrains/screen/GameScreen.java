@@ -1,6 +1,9 @@
 package ru.geekbrains.screen;
 
 import com.badlogic.gdx.Game;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -21,6 +24,9 @@ public class GameScreen extends BaseScreen {
 
     private Texture bg;
     private Background background;
+    private Music music;
+    private Sound soundBullet;
+
     private TextureAtlas atlas;
 
     private Star[] stars;
@@ -36,6 +42,12 @@ public class GameScreen extends BaseScreen {
     @Override
     public void show() {
         super.show();
+        music = Gdx.audio.newMusic(Gdx.files.internal("sounds/music.mp3"));
+        music.setVolume(0.7f);
+        music.setLooping(true);
+        music.play();
+        soundBullet = Gdx.audio.newSound(Gdx.files.internal("sounds/bullet.wav"));
+
         bg = new Texture("textures/bg.png");
         background = new Background(new TextureRegion(bg));
         atlas = new TextureAtlas("textures/mainAtlas.tpack");
@@ -44,7 +56,7 @@ public class GameScreen extends BaseScreen {
             stars[i] = new Star(atlas);
         }
         bulletPool = new BulletPool();
-        mainShip = new MainShip(atlas, bulletPool); // корабль умеет стрелять
+        mainShip = new MainShip(atlas, bulletPool, soundBullet); // корабль умеет стрелять со звуком
     }
 
     @Override
@@ -93,6 +105,9 @@ public class GameScreen extends BaseScreen {
         bg.dispose();
         atlas.dispose();
         bulletPool.dispose();
+        music.stop();
+        music.dispose();
+        soundBullet.dispose();
         super.dispose();
     }
 

@@ -1,6 +1,7 @@
 package ru.geekbrains.sprite;
 
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
 
@@ -28,11 +29,13 @@ public class MainShip extends Sprite {
     private Rect worldBounds;
     private BulletPool bulletPool;
     private TextureAtlas atlas;
+    private Sound shootSound;
 
-    public MainShip(TextureAtlas atlas, BulletPool bulletPool) {
+    public MainShip(TextureAtlas atlas, BulletPool bulletPool, Sound shootSound) {
         super(atlas.findRegion("main_ship"),1,2,2);
-        this.bulletPool = bulletPool;
         this.atlas = atlas;
+        this.bulletPool = bulletPool;
+        this.shootSound = shootSound;
         setHeightProportion(MAIN_SHIP_HEIGHT);
     }
 
@@ -137,6 +140,7 @@ public class MainShip extends Sprite {
     }
 
     public void shoot() {  // стрельба
+        shootSound.play(0.2f);
         Bullet bullet = bulletPool.obtain();
         bullet.set(this, atlas.findRegion("bulletMainShip"), pos, new Vector2(0, 0.5f), 0.01f, worldBounds, 1);
     }
