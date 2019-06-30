@@ -13,6 +13,7 @@ import ru.geekbrains.math.Rect;
 import ru.geekbrains.pool.BulletPool;
 import ru.geekbrains.pool.EnemyPool;
 import ru.geekbrains.sprite.Background;
+import ru.geekbrains.sprite.Enemy;
 import ru.geekbrains.sprite.MainShip;
 import ru.geekbrains.sprite.Star;
 import ru.geekbrains.utils.EnemyGenerator;
@@ -77,14 +78,15 @@ public class GameScreen extends BaseScreen {
         bulletPool.updateActiveSprites(delta);
         enemyPool.updateActiveSprites(delta);
         enemyGenerator.generate(delta);
+        checkCollisions();
     }
 
-    public void freeAllDestroyedSprites() {
+    private void freeAllDestroyedSprites() {
         bulletPool.freeAllDestroyedActiveSprites();
         enemyPool.freeAllDestroyedActiveSprites();
     }
 
-    public void draw() {
+    private void draw() {
         batch.begin();
         background.draw(batch);
         for (Star star : stars) {
@@ -145,5 +147,14 @@ public class GameScreen extends BaseScreen {
     @Override
     public boolean touchDragged(Vector2 touch, int pointer) {
         return super.touchDragged(touch, pointer);
+    }
+
+    private void checkCollisions() {
+
+        for (Enemy enemy : enemyPool.getActiveObjects()) {
+            if (!enemy.isOutside(mainShip)) {
+                enemy.destroy();
+            }
+        }
     }
 }

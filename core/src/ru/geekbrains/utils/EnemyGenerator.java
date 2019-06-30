@@ -107,7 +107,7 @@ public class EnemyGenerator {
                 );
             }
             enemy.pos.x = Rnd.nextFloat(worldBounds.getLeft() + enemy.getHalfWidth(), worldBounds.getRight() - enemy.getHalfWidth());
-            enemy.setBottom(worldBounds.getTop());
+            enemy.setTop(worldBounds.getTop());
         }
     }
 }
