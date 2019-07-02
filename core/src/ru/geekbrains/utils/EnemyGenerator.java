@@ -39,6 +39,7 @@ public class EnemyGenerator {
     private Vector2 enemySmallV;
     private Vector2 enemyMiddleV;
     private Vector2 enemyBigV;
+    private Vector2 vInitial;
 
     private TextureRegion bulletRegion;
     private EnemyPool enemyPool;
@@ -51,9 +52,10 @@ public class EnemyGenerator {
     public EnemyGenerator(TextureAtlas atlas, EnemyPool enemyPool, Rect worldBounds) {
         this.enemyPool = enemyPool;
         this.worldBounds = worldBounds;
-        this.enemySmallV = new Vector2(0f, -0.2f);
+        this.enemySmallV = new Vector2(0f, -0.15f);
         this.enemyMiddleV = new Vector2(0f, -0.03f);
         this.enemyBigV = new Vector2(0f, -0.005f);
+        this.vInitial = new Vector2(0f, -0.2f);
         TextureRegion region0 = atlas.findRegion("enemy0");
         enemySmallRegion = Regions.split(region0, 1, 2, 2);
         TextureRegion region1 = atlas.findRegion("enemy1");
@@ -72,6 +74,7 @@ public class EnemyGenerator {
             if (type < 0.5f) {
                 enemy.set(
                         enemySmallRegion,
+                        vInitial,
                         enemySmallV,
                         bulletRegion,
                         ENEMY_SMALL_BULLET_HEIGHT,
@@ -84,6 +87,7 @@ public class EnemyGenerator {
             } else if (type < 0.8f){
                 enemy.set(
                         enemyMiddleRegion,
+                        vInitial,
                         enemyMiddleV,
                         bulletRegion,
                         ENEMY_MIDDLE_BULLET_HEIGHT,
@@ -96,6 +100,7 @@ public class EnemyGenerator {
             } else {
                 enemy.set(
                         enemyBigRegion,
+                        vInitial,
                         enemyBigV,
                         bulletRegion,
                         ENEMY_BIG_BULLET_HEIGHT,
@@ -107,6 +112,8 @@ public class EnemyGenerator {
                 );
             }
             enemy.pos.x = Rnd.nextFloat(worldBounds.getLeft() + enemy.getHalfWidth(), worldBounds.getRight() - enemy.getHalfWidth());
+// 1-ый вариант - вражеские корабли сразу появляются на экране
+//            enemy.setTop(worldBounds.getTop());
             enemy.setBottom(worldBounds.getTop());
         }
     }
