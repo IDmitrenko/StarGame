@@ -74,6 +74,11 @@ public class GameScreen extends BaseScreen {
         for (Star star : stars) {
             star.update(delta);
         }
+        for (Enemy enemy : enemyPool.getActiveObjects()) {
+            if (enemy.getTop() < worldBounds.getTop()) {
+                enemy.setV0();
+            }
+        }
         mainShip.update(delta);
         bulletPool.updateActiveSprites(delta);
         enemyPool.updateActiveSprites(delta);
