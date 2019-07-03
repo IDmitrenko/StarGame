@@ -74,7 +74,6 @@ public class EnemyGenerator {
             if (type < 0.5f) {
                 enemy.set(
                         enemySmallRegion,
-                        vInitial,
                         enemySmallV,
                         bulletRegion,
                         ENEMY_SMALL_BULLET_HEIGHT,
@@ -87,7 +86,6 @@ public class EnemyGenerator {
             } else if (type < 0.8f){
                 enemy.set(
                         enemyMiddleRegion,
-                        vInitial,
                         enemyMiddleV,
                         bulletRegion,
                         ENEMY_MIDDLE_BULLET_HEIGHT,
@@ -100,7 +98,6 @@ public class EnemyGenerator {
             } else {
                 enemy.set(
                         enemyBigRegion,
-                        vInitial,
                         enemyBigV,
                         bulletRegion,
                         ENEMY_BIG_BULLET_HEIGHT,
