@@ -18,6 +18,7 @@ import ru.geekbrains.pool.ExplosionPool;
 import ru.geekbrains.sprite.Background;
 import ru.geekbrains.sprite.Bullet;
 import ru.geekbrains.sprite.Enemy;
+import ru.geekbrains.sprite.GameOver;
 import ru.geekbrains.sprite.MainShip;
 import ru.geekbrains.sprite.Star;
 import ru.geekbrains.utils.EnemyGenerator;
@@ -45,6 +46,8 @@ public class GameScreen extends BaseScreen {
     private Sound bulletSound;
     private Sound explosionSound;
 
+    private GameOver gameOver;
+
     @Override
     public void show() {
         super.show();
@@ -55,6 +58,7 @@ public class GameScreen extends BaseScreen {
         bg = new Texture("textures/bg.png");
         background = new Background(new TextureRegion(bg));
         atlas = new TextureAtlas("textures/mainAtlas.tpack");
+        gameOver = new GameOver(atlas);
 
         stars = new Star[STAR_COUNT];
         for (int i = 0; i < stars.length; i++) {
@@ -68,6 +72,7 @@ public class GameScreen extends BaseScreen {
         music.setVolume(0.7f);
         music.setLooping(true);
         music.play();
+
     }
 
     @Override
@@ -89,6 +94,9 @@ public class GameScreen extends BaseScreen {
             bulletPool.updateActiveSprites(delta);
             enemyPool.updateActiveSprites(delta);
             enemyGenerator.generate(delta);
+        } else {
+// Game Over
+            gameOver.update(delta);
         }
     }
 
@@ -108,6 +116,8 @@ public class GameScreen extends BaseScreen {
             mainShip.draw(batch);
             bulletPool.drawActiveSprites(batch);
             enemyPool.drawActiveSprites(batch);
+        } else {
+            gameOver.draw(batch);
         }
         explosionPool.drawActiveSprites(batch);
         batch.end();
@@ -121,6 +131,7 @@ public class GameScreen extends BaseScreen {
             star.resize(worldBounds);
         }
         mainShip.resize(worldBounds);
+        gameOver.resize(worldBounds);
     }
 
     @Override
