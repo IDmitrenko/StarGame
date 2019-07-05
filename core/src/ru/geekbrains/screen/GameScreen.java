@@ -239,7 +239,7 @@ public class GameScreen extends BaseScreen implements ActionListener {
 
     private void startNewGame() {
 
-        mainShip.setToNewGame();
+        mainShip.setToNewGame(worldBounds);
 
         bulletPool.freeAllActiveSprites();
         enemyPool.freeAllActiveSprites();
