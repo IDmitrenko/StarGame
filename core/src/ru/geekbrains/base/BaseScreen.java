@@ -1,5 +1,6 @@
 package ru.geekbrains.base;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
@@ -15,6 +16,8 @@ import ru.geekbrains.math.Rect;
 public abstract class BaseScreen implements Screen, InputProcessor {
 
     protected SpriteBatch batch;
+    protected Game game;
+
     private Rect screenBounds;   // границы экрана в пикселях
     protected Rect worldBounds;    // границы проэкции мировых координат
     private Rect glBounds;       // gl-левские координаты
@@ -23,6 +26,10 @@ public abstract class BaseScreen implements Screen, InputProcessor {
     private Matrix3 screenToWorld;       // матрица преобразований из экранных координат к мировым
 
     private Vector2 touch;
+
+    public BaseScreen(Game game) {
+        this.game = game;
+    }
 
     @Override
     public void show() {

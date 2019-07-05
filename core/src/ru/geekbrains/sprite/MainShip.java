@@ -23,16 +23,21 @@ public class MainShip extends Ship {
         super(atlas.findRegion("main_ship"),1,2,2);
         this.bulletPool = bulletPool;
         this.explosionPool = explosionPool;
+        this.bulletRegion = atlas.findRegion("bulletMainShip");
+        this.shootSound = shootSound;
+        setHeightProportion(0.15f);
+        setToNewGame();
+    }
+
+    public void setToNewGame() {
         this.v = new Vector2();
         this.v0 = new Vector2(0.5f, 0f);
-        this.bulletRegion = atlas.findRegion("bulletMainShip");
         this.bulletV = new Vector2(0f, 0.5f);
         this.bulletHeight = 0.01f;
         this.damage = 1;
-        this.shootSound = shootSound;
         this.reloadInterval = 0.25f;
         this.hp = 100;
-        setHeightProportion(0.15f);
+        flushDestroy();
     }
 
     public void resize(Rect worldBounds) {
@@ -45,7 +50,7 @@ public class MainShip extends Ship {
         super.update(delta);
         reloadTimer += delta;
         if (reloadTimer >= reloadInterval) {
-            reloadTimer = 0;
+            reloadTimer = 0f;
             shoot();
         }
         if (getRight() > worldBounds.getRight()) {
