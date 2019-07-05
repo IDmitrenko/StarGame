@@ -1,5 +1,6 @@
 package ru.geekbrains.screen;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
@@ -10,6 +11,7 @@ import com.badlogic.gdx.math.Vector2;
 
 import java.util.List;
 
+import ru.geekbrains.base.ActionListener;
 import ru.geekbrains.base.BaseScreen;
 import ru.geekbrains.math.Rect;
 import ru.geekbrains.pool.BulletPool;
@@ -17,12 +19,14 @@ import ru.geekbrains.pool.EnemyPool;
 import ru.geekbrains.pool.ExplosionPool;
 import ru.geekbrains.sprite.Background;
 import ru.geekbrains.sprite.Bullet;
+import ru.geekbrains.sprite.ButtonNewGame;
 import ru.geekbrains.sprite.Enemy;
+import ru.geekbrains.sprite.MessageGameOver;
 import ru.geekbrains.sprite.MainShip;
 import ru.geekbrains.sprite.Star;
 import ru.geekbrains.utils.EnemyGenerator;
 
-public class GameScreen extends BaseScreen {
+public class GameScreen extends BaseScreen implements ActionListener {
 
     private static final int STAR_COUNT = 64;
 
@@ -45,6 +49,13 @@ public class GameScreen extends BaseScreen {
     private Sound bulletSound;
     private Sound explosionSound;
 
+    private MessageGameOver messageGameOver;
+    private ButtonNewGame buttonNewGame;
+
+    public GameScreen(Game game) {
+        super(game);
+    }
+
     @Override
     public void show() {
         super.show();
@@ -55,6 +66,8 @@ public class GameScreen extends BaseScreen {
         bg = new Texture("textures/bg.png");
         background = new Background(new TextureRegion(bg));
         atlas = new TextureAtlas("textures/mainAtlas.tpack");
+        messageGameOver = new MessageGameOver(atlas);
+        buttonNewGame = new ButtonNewGame(atlas, this);
 
         stars = new Star[STAR_COUNT];
         for (int i = 0; i < stars.length; i++) {
@@ -68,6 +81,7 @@ public class GameScreen extends BaseScreen {
         music.setVolume(0.7f);
         music.setLooping(true);
         music.play();
+        startNewGame();
     }
 
     @Override
@@ -89,6 +103,8 @@ public class GameScreen extends BaseScreen {
             bulletPool.updateActiveSprites(delta);
             enemyPool.updateActiveSprites(delta);
             enemyGenerator.generate(delta);
+        } else {
+            messageGameOver.update(delta);
         }
     }
 
@@ -108,6 +124,9 @@ public class GameScreen extends BaseScreen {
             mainShip.draw(batch);
             bulletPool.drawActiveSprites(batch);
             enemyPool.drawActiveSprites(batch);
+        } else {
+            messageGameOver.draw(batch);
+            buttonNewGame.draw(batch);
         }
         explosionPool.drawActiveSprites(batch);
         batch.end();
@@ -157,6 +176,8 @@ public class GameScreen extends BaseScreen {
     public boolean touchDown(Vector2 touch, int pointer) {
         if (!mainShip.isDestroyed()) {
             mainShip.touchDown(touch, pointer);
+        } else {
+            buttonNewGame.touchDown(touch, pointer);
         }
         return false;
     }
@@ -165,6 +186,8 @@ public class GameScreen extends BaseScreen {
     public boolean touchUp(Vector2 touch, int pointer) {
         if (!mainShip.isDestroyed()) {
             mainShip.touchUp(touch, pointer);
+        } else {
+            buttonNewGame.touchUp(touch, pointer);
         }
         return false;
     }
@@ -211,6 +234,23 @@ public class GameScreen extends BaseScreen {
                     bullet.destroy();
                 }
             }
+        }
+    }
+
+    private void startNewGame() {
+
+        mainShip.setToNewGame();
+
+        bulletPool.freeAllActiveSprites();
+        enemyPool.freeAllActiveSprites();
+        explosionPool.freeAllActiveSprites();
+    }
+
+    public void action(Object source) {
+        if (source == buttonNewGame) {
+            startNewGame();
+        } else {
+            throw new RuntimeException("Unknown source = " + source);
         }
     }
 }

@@ -8,9 +8,12 @@ public abstract class ScaledTouchUpButton extends Sprite {
 
     private int pointer;
     private boolean pressed;
+    private ActionListener actionListener;
 
-    public ScaledTouchUpButton(TextureRegion region) {
+    public ScaledTouchUpButton(TextureRegion region, ActionListener actionListener) {
         super(region);
+        this.actionListener = actionListener;
+        setHeightProportion(0.15f);
     }
 
     @Override
@@ -21,7 +24,7 @@ public abstract class ScaledTouchUpButton extends Sprite {
         this.pointer = pointer;
         this.scale = SCALE;
         pressed = true;
-        return false;
+        return true;
     }
 
     @Override
@@ -30,12 +33,12 @@ public abstract class ScaledTouchUpButton extends Sprite {
             return false;
         }
         if (isMe(touch)) {
-            action();
+            actionListener.action(this);
+            return true;
         }
         pressed = false;
         scale = 1f;
         return false;
     }
 
-    public abstract void action();
 }

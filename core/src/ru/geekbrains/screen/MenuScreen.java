@@ -1,11 +1,13 @@
 package ru.geekbrains.screen;
 
 import com.badlogic.gdx.Game;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
+import ru.geekbrains.base.ActionListener;
 import ru.geekbrains.base.BaseScreen;
 import ru.geekbrains.math.Rect;
 import ru.geekbrains.sprite.Background;
@@ -13,11 +15,9 @@ import ru.geekbrains.sprite.ButtonExit;
 import ru.geekbrains.sprite.ButtonPlay;
 import ru.geekbrains.sprite.Star;
 
-public class MenuScreen extends BaseScreen {
+public class MenuScreen extends BaseScreen implements ActionListener{
 
     private static final int STAR_COUNT = 256;
-
-    private Game game;
 
     private Texture bg;
     private Background background;
@@ -29,7 +29,7 @@ public class MenuScreen extends BaseScreen {
     private Star[] stars;
 
     public MenuScreen(Game game) {
-        this.game = game;
+        super(game);
     }
 
     @Override
@@ -38,8 +38,8 @@ public class MenuScreen extends BaseScreen {
         bg = new Texture("textures/bg.png");
         background = new Background(new TextureRegion(bg));
         atlas = new TextureAtlas("textures/menuAtlas.tpack");
-        buttonExit = new ButtonExit(atlas);
-        buttonPlay = new ButtonPlay(atlas, game);
+        buttonExit = new ButtonExit(atlas, this);
+        buttonPlay = new ButtonPlay(atlas, this);
         stars = new Star[STAR_COUNT];
         for (int i = 0; i < stars.length; i++) {
             stars[i] = new Star(atlas);
@@ -99,6 +99,17 @@ public class MenuScreen extends BaseScreen {
         buttonExit.touchUp(touch, pointer);
         buttonPlay.touchUp(touch, pointer);
         return false;
+    }
+
+    @Override
+    public void action(Object source) {
+        if (source == buttonExit) {
+            Gdx.app.exit();
+        } else if (source == buttonPlay) {
+            game.setScreen(new GameScreen(game));
+        } else {
+            throw new RuntimeException("Unknown source = " + source);
+        }
     }
 
 /*
