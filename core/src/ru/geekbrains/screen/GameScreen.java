@@ -80,7 +80,7 @@ public class GameScreen extends BaseScreen implements ActionListener {
     public void show() {
         super.show();
         font = new Font("font/font.fnt", "font/font.png");
-        font.setSize(0.03f);
+        font.setSize(0.025f);
         music = Gdx.audio.newMusic(Gdx.files.internal("sounds/music.mp3"));
         laserSound = Gdx.audio.newSound(Gdx.files.internal("sounds/laser.wav"));
         bulletSound = Gdx.audio.newSound(Gdx.files.internal("sounds/bullet.wav"));
@@ -166,8 +166,8 @@ public class GameScreen extends BaseScreen implements ActionListener {
         sbHp.setLength(0);
         sbLevel.setLength(0);
         font.draw(batch, sbFrags.append(FRAGS).append(frags), worldBounds.getLeft(), worldBounds.getTop());
-        font.draw(batch, sbScore.append(SCORE).append(score), worldBounds.pos.x - 0.08f, worldBounds.getTop(), Align.center);
-        font.draw(batch, sbHp.append(HP).append(mainShip.getHp()), worldBounds.pos.x + 0.12f, worldBounds.getTop(), Align.center);
+        font.draw(batch, sbScore.append(SCORE).append(score), worldBounds.pos.x - 0.05f, worldBounds.getTop(), Align.center);
+        font.draw(batch, sbHp.append(HP).append(mainShip.getHp()), worldBounds.pos.x + 0.11f, worldBounds.getTop(), Align.center);
         font.draw(batch, sbLevel.append(LEVEL).append(enemyGenerator.getLevel()), worldBounds.getRight(), worldBounds.getTop(), Align.right);
     }
 
