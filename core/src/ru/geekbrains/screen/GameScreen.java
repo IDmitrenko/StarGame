@@ -34,6 +34,8 @@ public class GameScreen extends BaseScreen implements ActionListener {
     private static final String FRAGS = "Frags:";
     private static final String HP = "HP:";
     private static final String LEVEL = "Level:";
+    private static final String SCORE = "Score:";
+
     private static final int STAR_COUNT = 64;
     private enum State {PLAYING, PAUSE, GAME_OVER}
 
@@ -64,9 +66,11 @@ public class GameScreen extends BaseScreen implements ActionListener {
     private State oldState;
 
     private int frags = 0;
+    private int score = 0;
     private StringBuffer sbFrags;
     private StringBuffer sbHp;
     private StringBuffer sbLevel;
+    private StringBuffer sbScore;
 
     public GameScreen(Game game) {
         super(game);
@@ -97,6 +101,7 @@ public class GameScreen extends BaseScreen implements ActionListener {
         sbFrags = new StringBuffer();
         sbHp = new StringBuffer();
         sbLevel = new StringBuffer();
+        sbScore = new StringBuffer();
 
         for (int i = 0; i < stars.length; i++) {
             stars[i] = new TrackingStar(atlas, mainShip.getV());
@@ -157,10 +162,12 @@ public class GameScreen extends BaseScreen implements ActionListener {
 
     private void printInfo() {
         sbFrags.setLength(0);
+        sbScore.setLength(0);
         sbHp.setLength(0);
         sbLevel.setLength(0);
         font.draw(batch, sbFrags.append(FRAGS).append(frags), worldBounds.getLeft(), worldBounds.getTop());
-        font.draw(batch, sbHp.append(HP).append(mainShip.getHp()), worldBounds.pos.x, worldBounds.getTop(), Align.center);
+        font.draw(batch, sbScore.append(SCORE).append(score), worldBounds.pos.x - 0.08f, worldBounds.getTop(), Align.center);
+        font.draw(batch, sbHp.append(HP).append(mainShip.getHp()), worldBounds.pos.x + 0.12f, worldBounds.getTop(), Align.center);
         font.draw(batch, sbLevel.append(LEVEL).append(enemyGenerator.getLevel()), worldBounds.getRight(), worldBounds.getTop(), Align.right);
     }
 
@@ -276,6 +283,7 @@ public class GameScreen extends BaseScreen implements ActionListener {
                         enemy.damage(bullet.getDamage());
                         if (enemy.isDestroyed()) {
                             frags++;
+                            score += enemy.getDamage();
                         }
                         bullet.destroy();
                     }
@@ -298,6 +306,7 @@ public class GameScreen extends BaseScreen implements ActionListener {
 
         state = State.PLAYING;
         frags = 0;
+        score = 0;
         enemyGenerator.setLevel(1);
 
         bulletPool.freeAllActiveSprites();
