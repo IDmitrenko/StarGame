@@ -25,6 +25,7 @@ import ru.geekbrains.sprite.Enemy;
 import ru.geekbrains.sprite.MessageGameOver;
 import ru.geekbrains.sprite.MainShip;
 import ru.geekbrains.sprite.Star;
+import ru.geekbrains.sprite.TrackingStar;
 import ru.geekbrains.utils.EnemyGenerator;
 import ru.geekbrains.utils.Font;
 
@@ -41,7 +42,7 @@ public class GameScreen extends BaseScreen implements ActionListener {
     private Background background;
     private TextureAtlas atlas;
 
-    private Star[] stars;
+    private TrackingStar[] stars;
 
     private BulletPool bulletPool;
     private EnemyPool enemyPool;
@@ -85,19 +86,22 @@ public class GameScreen extends BaseScreen implements ActionListener {
         atlas = new TextureAtlas("textures/mainAtlas.tpack");
         messageGameOver = new MessageGameOver(atlas);
         buttonNewGame = new ButtonNewGame(atlas, this);
-        sbFrags = new StringBuffer();
-        sbHp = new StringBuffer();
-        sbLevel = new StringBuffer();
 
-        stars = new Star[STAR_COUNT];
-        for (int i = 0; i < stars.length; i++) {
-            stars[i] = new Star(atlas);
-        }
+        stars = new TrackingStar[STAR_COUNT];
         bulletPool = new BulletPool();
         explosionPool = new ExplosionPool(atlas, explosionSound);
         enemyPool = new EnemyPool(bulletPool, explosionPool, bulletSound, worldBounds);
         enemyGenerator = new EnemyGenerator(atlas, enemyPool, worldBounds);
         mainShip = new MainShip(atlas, bulletPool, explosionPool, laserSound); // корабль умеет стрелять со звуком
+
+        sbFrags = new StringBuffer();
+        sbHp = new StringBuffer();
+        sbLevel = new StringBuffer();
+
+        for (int i = 0; i < stars.length; i++) {
+            stars[i] = new TrackingStar(atlas, mainShip.getV());
+        }
+
         music.setVolume(0.7f);
         music.setLooping(true);
         music.play();
