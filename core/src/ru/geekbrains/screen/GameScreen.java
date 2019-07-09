@@ -34,6 +34,8 @@ public class GameScreen extends BaseScreen implements ActionListener {
     private static final String FRAGS = "Frags:";
     private static final String HP = "HP:";
     private static final String LEVEL = "Level:";
+    private static final String SCORE = "Score:";
+
     private static final int STAR_COUNT = 64;
     private enum State {PLAYING, PAUSE, GAME_OVER}
 
@@ -64,9 +66,11 @@ public class GameScreen extends BaseScreen implements ActionListener {
     private State oldState;
 
     private int frags = 0;
-    private StringBuffer sbFrags;
-    private StringBuffer sbHp;
-    private StringBuffer sbLevel;
+    private int score = 0;
+    private StringBuilder sbFrags;
+    private StringBuilder sbHp;
+    private StringBuilder sbLevel;
+    private StringBuilder sbScore;
 
     public GameScreen(Game game) {
         super(game);
@@ -76,7 +80,7 @@ public class GameScreen extends BaseScreen implements ActionListener {
     public void show() {
         super.show();
         font = new Font("font/font.fnt", "font/font.png");
-        font.setSize(0.03f);
+        font.setSize(0.025f);
         music = Gdx.audio.newMusic(Gdx.files.internal("sounds/music.mp3"));
         laserSound = Gdx.audio.newSound(Gdx.files.internal("sounds/laser.wav"));
         bulletSound = Gdx.audio.newSound(Gdx.files.internal("sounds/bullet.wav"));
@@ -94,9 +98,10 @@ public class GameScreen extends BaseScreen implements ActionListener {
         enemyGenerator = new EnemyGenerator(atlas, enemyPool, worldBounds);
         mainShip = new MainShip(atlas, bulletPool, explosionPool, laserSound); // корабль умеет стрелять со звуком
 
-        sbFrags = new StringBuffer();
-        sbHp = new StringBuffer();
-        sbLevel = new StringBuffer();
+        sbFrags = new StringBuilder();
+        sbHp = new StringBuilder();
+        sbLevel = new StringBuilder();
+        sbScore = new StringBuilder();
 
         for (int i = 0; i < stars.length; i++) {
             stars[i] = new TrackingStar(atlas, mainShip.getV());
@@ -157,10 +162,12 @@ public class GameScreen extends BaseScreen implements ActionListener {
 
     private void printInfo() {
         sbFrags.setLength(0);
+        sbScore.setLength(0);
         sbHp.setLength(0);
         sbLevel.setLength(0);
         font.draw(batch, sbFrags.append(FRAGS).append(frags), worldBounds.getLeft(), worldBounds.getTop());
-        font.draw(batch, sbHp.append(HP).append(mainShip.getHp()), worldBounds.pos.x, worldBounds.getTop(), Align.center);
+        font.draw(batch, sbScore.append(SCORE).append(score), worldBounds.pos.x - 0.05f, worldBounds.getTop(), Align.center);
+        font.draw(batch, sbHp.append(HP).append(mainShip.getHp()), worldBounds.pos.x + 0.11f, worldBounds.getTop(), Align.center);
         font.draw(batch, sbLevel.append(LEVEL).append(enemyGenerator.getLevel()), worldBounds.getRight(), worldBounds.getTop(), Align.right);
     }
 
@@ -276,6 +283,7 @@ public class GameScreen extends BaseScreen implements ActionListener {
                         enemy.damage(bullet.getDamage());
                         if (enemy.isDestroyed()) {
                             frags++;
+                            score += enemy.getDamage();
                         }
                         bullet.destroy();
                     }
@@ -298,6 +306,7 @@ public class GameScreen extends BaseScreen implements ActionListener {
 
         state = State.PLAYING;
         frags = 0;
+        score = 0;
         enemyGenerator.setLevel(1);
 
         bulletPool.freeAllActiveSprites();
