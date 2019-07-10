@@ -67,10 +67,10 @@ public class GameScreen extends BaseScreen implements ActionListener {
 
     private int frags = 0;
     private int score = 0;
-    private StringBuffer sbFrags;
-    private StringBuffer sbHp;
-    private StringBuffer sbLevel;
-    private StringBuffer sbScore;
+    private StringBuilder sbFrags;
+    private StringBuilder sbHp;
+    private StringBuilder sbLevel;
+    private StringBuilder sbScore;
 
     public GameScreen(Game game) {
         super(game);
@@ -98,10 +98,10 @@ public class GameScreen extends BaseScreen implements ActionListener {
         enemyGenerator = new EnemyGenerator(atlas, enemyPool, worldBounds);
         mainShip = new MainShip(atlas, bulletPool, explosionPool, laserSound); // корабль умеет стрелять со звуком
 
-        sbFrags = new StringBuffer();
-        sbHp = new StringBuffer();
-        sbLevel = new StringBuffer();
-        sbScore = new StringBuffer();
+        sbFrags = new StringBuilder();
+        sbHp = new StringBuilder();
+        sbLevel = new StringBuilder();
+        sbScore = new StringBuilder();
 
         for (int i = 0; i < stars.length; i++) {
             stars[i] = new TrackingStar(atlas, mainShip.getV());
